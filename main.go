@@ -10,8 +10,8 @@ import (
 )
 
 type WordCount struct {
-	Word  string
-	Count int
+	Word  string `json:"word"`
+	Count int `json:"count"`
 }
 
 type WordCountsRequest struct {
