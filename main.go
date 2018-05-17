@@ -11,39 +11,39 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/{text}", GetWordCount).Methods("GET")
+	router.HandleFunc("/{text}", GetWordCounts).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
-func GetWordCount(w http.ResponseWriter, r *http.Request) {
+func GetWordCounts(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	json.NewEncoder(w).Encode(params["text"])
 
 	words := strings.Fields(params["text"])
-	wordCount := make(map[string]int)
+	wordCountsMap := make(map[string]int)
 
 	for _, word := range words {
-		wordCount[strings.ToLower(word)]++
+		wordCountsMap[strings.ToLower(word)]++
 	}
 
-	type wordcount struct {
+	type WordCount struct {
 		Word  string
 		Count int
 	}
 
-	var wordCountKeyval []wordcount
-	for w, c := range wordCount {
-		wordCountKeyval = append(wordCountKeyval, wordcount{w, c})
+	var wordCounts []WordCount
+	for w, c := range wordCountsMap {
+		wordCounts = append(wordCounts, WordCount{w, c})
 	}
 
-	sort.Slice(wordCountKeyval, func(i, j int) bool {
-		return wordCountKeyval[i].Count > wordCountKeyval[j].Count
+	sort.Slice(wordCounts, func(i, j int) bool {
+		return wordCounts[i].Count > wordCounts[j].Count
 	})
 
-	if len(wordCountKeyval) < 10  {
-		json.NewEncoder(w).Encode(wordCountKeyval)
+	if len(wordCounts) < 10  {
+		json.NewEncoder(w).Encode(wordCounts)
 	} else {
-		topTenWordCount := append(wordCountKeyval[:0], wordCountKeyval[:10]...)
-		json.NewEncoder(w).Encode(topTenWordCount)
+		topTenWordCounts := append(wordCounts[:0], wordCounts[:10]...)
+		json.NewEncoder(w).Encode(topTenWordCounts)
 	}
 }
