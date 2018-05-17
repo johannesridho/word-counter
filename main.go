@@ -10,12 +10,12 @@ import (
 )
 
 type WordCount struct {
-	word  string
-	count int
+	Word  string
+	Count int
 }
 
 type WordCountsRequest struct {
-	text string
+	Text string
 }
 
 func main() {
@@ -33,7 +33,7 @@ func GetWordCounts(writer http.ResponseWriter, request *http.Request) {
 	}
 	defer request.Body.Close()
 
-	text := wordCountsRequest.text
+	text := wordCountsRequest.Text
 
 	words := strings.Fields(text)
 	wordCountsMap := make(map[string]int)
@@ -48,7 +48,7 @@ func GetWordCounts(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	sort.Slice(wordCounts, func(i, j int) bool {
-		return wordCounts[i].count > wordCounts[j].count
+		return wordCounts[i].Count > wordCounts[j].Count
 	})
 
 	if len(wordCounts) < 10  {
